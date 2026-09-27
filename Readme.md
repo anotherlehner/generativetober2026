@@ -1,4 +1,4 @@
-# Geometrinktober 2026
+# Generativetober 2026
 
-Algorithmic geometric artwork with processing for October 2026
+Algorithmic artwork with processing for October 2026.
 
