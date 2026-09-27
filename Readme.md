@@ -2,6 +2,8 @@
 
 Algorithmic artwork with processing for October 2026.
 
+I saw a blog post recently by Duncan Geere from 2020 about an exercise he did for Inktober of using a plotter to draw inked generative artwork ([https://blog.duncangeere.com/inktober-2020-in-review/](https://blog.duncangeere.com/inktober-2020-in-review/). I've been playing with p5.js the last couple of weeks and Inktober 2026 starts this week and figured I'm at a place with my processing code where it's time to start making things instead of just coding examples. So the idea is to follow the prompts for Inktober 2026 and make a generative art piece with p5.js and ReScript for each day of October. I don't have a plotter but if I did then theoretically I could print some of these for real but that's not really the point. I want to push myself to make something interesting each day and explore. 
+
 Martin Lehner
 @anotherlehner
 10/2026
