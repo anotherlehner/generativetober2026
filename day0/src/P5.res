@@ -12,7 +12,7 @@ external background: @unwrap
 
 @val external beginShape: int => unit = "beginShape"
 
-@val external circle: (float, float, float) => unit = "circle"
+// @val external circle: (float, float, float) => unit = "circle"
 
 @val external constrain: (float, float, float) => float = "constrain"
 
@@ -63,7 +63,7 @@ external noise: @unwrap
 
 @val external noStroke: unit => unit = "noStroke"
 
-@val external point: (float, float) => unit = "point"
+// @val external point: (float, float) => unit = "point"
 
 @val external pop: unit => unit = "pop"
 
@@ -74,15 +74,15 @@ external noise: @unwrap
 @val
 external random: @unwrap
 [
-  | #Num(int)
-  | #Range(int, int)
+  | #Num(float)
+  | #Range(float, float)
 ] => float = "random"
 
 @val external randomChoice: array<'a> => 'a = "random"
 
 @val external randomGaussian: (float, float) => float = "randomGaussian"
 
-@val external rect: (float, float, float, float) => unit = "rect"
+// @val external rect: (float, float, float, float) => unit = "rect"
 
 @val external rotateX: float => unit = "rotateX"
 
@@ -126,193 +126,157 @@ type terrain
 
 @val external updatePixels: unit => unit = "updatePixels"
 
-module Prim2D = {
+type mode = [#CORNER | #CORNERS | #CENTER | #RADIUS]
+type arcMode = [#CHORD | #PIE | #OPEN]
 
-  type t
+type numOrString = [
+  | #N(float)
+  | #S(string)
+]
 
-  @module("p5") @new
-  external make: unit => t = "default"
+type num = float
 
-  type mode = [#CORNER | #CORNERS | #CENTER | #RADIUS]
-  type arcMode = [#CHORD | #PIE | #OPEN]
+// --- arc ---
+@val
+external arcFloat: (
+  ~x: float,
+  ~y: float,
+  ~w: float,
+  ~h: float,
+  ~start: float,
+  ~stop: float,
+  ~mode: string=?,
+  ~detail: int=?,
+) => unit = "arc"
 
-  type numOrString = [
-    | #N(float)
-    | #S(string)
-  ]
+let arc = (
+  ~x: float,
+  ~y: float,
+  ~w: float,
+  ~h: float,
+  ~start: float,
+  ~stop: float,
+  ~mode: option<string>=?,
+  ~detail: option<int>=?,
+  (),
+) => {
+  arcFloat(~x, ~y, ~w, ~h, ~start, ~stop, ~mode?, ~detail?)
+}
 
-  type num = float
+// --- circle ---
+@val
+external circle: (~x: float, ~y: float, ~d: float) => unit = "circle"
 
-  module Prim2D = {
-    // --- arc ---
-    @send
-    external arcFloat: (
-      t,
-      ~x: float,
-      ~y: float,
-      ~w: float,
-      ~h: float,
-      ~start: float,
-      ~stop: float,
-      ~mode: string=?,
-      ~detail: int=?,
-    ) => unit = "arc"
+// --- ellipse ---
+@val
+external ellipse: (~x: float, ~y: float, ~w: float, ~h: float, ~detail: int=?) => unit = "ellipse"
 
-    let arc = (
-      inst: t,
-      ~x: float,
-      ~y: float,
-      ~w: float,
-      ~h: float,
-      ~start: float,
-      ~stop: float,
-      ~mode: option<string>=?,
-      ~detail: option<int>=?,
-      (),
-    ) => {
-      arcFloat(inst, ~x, ~y, ~w, ~h, ~start, ~stop, ~mode?, ~detail?)
-    }
+// --- line ---
+@val
+external line: (~x1: float, ~y1: float, ~x2: float, ~y2: float) => unit = "line"
 
-    // --- circle ---
-    @send
-    external circle: (t, ~x: float, ~y: float, ~d: float) => unit = "circle"
+@val
+external line3D: (~x1: float, ~y1: float, ~z1: float, ~x2: float, ~y2: float, ~z2: float) => unit =
+  "line"
 
-    // --- ellipse ---
-    @send
-    external ellipse: (
-      t,
-      ~x: float,
-      ~y: float,
-      ~w: float,
-      ~h: float=?,
-      ~detail: int=?,
-      unit,
-    ) => unit = "ellipse"
+// --- point ---
+@val
+external point: (~x: float, ~y: float, ~z: float=?) => unit = "point"
 
-    // --- line ---
-    @send
-    external line: (t, ~x1: float, ~y1: float, ~x2: float, ~y2: float) => unit = "line"
+// --- quad ---
+@val
+external quad: (
+  ~x1: float,
+  ~y1: float,
+  ~x2: float,
+  ~y2: float,
+  ~x3: float,
+  ~y3: float,
+  ~x4: float,
+  ~y4: float,
+  ~detailX: int=?,
+  ~detailY: int=?,
+) => unit = "quad"
 
-    @send
-    external line3D: (
-      t,
-      ~x1: float,
-      ~y1: float,
-      ~z1: float,
-      ~x2: float,
-      ~y2: float,
-      ~z2: float,
-    ) => unit = "line"
+@val
+external quad3D: (
+  ~x1: float,
+  ~y1: float,
+  ~z1: float,
+  ~x2: float,
+  ~y2: float,
+  ~z2: float,
+  ~x3: float,
+  ~y3: float,
+  ~z3: float,
+  ~x4: float,
+  ~y4: float,
+  ~z4: float,
+  ~detailX: int=?,
+  ~detailY: int=?,
+) => unit = "quad"
 
-    // --- point ---
-    @send
-    external point: (t, ~x: float, ~y: float, ~z: float=?) => unit = "point"
+// --- rect ---
+@val
+external rect: (
+  ~x: float,
+  ~y: float,
+  ~w: float,
+  ~h: float,
+  ~tl: float=?,
+  ~tr: float=?,
+  ~br: float=?,
+  ~bl: float=?,
+) => unit = "rect"
 
-    // --- quad ---
-    @send
-    external quad: (
-      t,
-      ~x1: float,
-      ~y1: float,
-      ~x2: float,
-      ~y2: float,
-      ~x3: float,
-      ~y3: float,
-      ~x4: float,
-      ~y4: float,
-      ~detailX: int=?,
-      ~detailY: int=?,
-      unit,
-    ) => unit = "quad"
+// --- square ---
+@val
+external square: (
+  ~x: float,
+  ~y: float,
+  ~s: float,
+  ~tl: float=?,
+  ~tr: float=?,
+  ~br: float=?,
+  ~bl: float=?,
+) => unit = "square"
 
-    @send
-    external quad3D: (
-      t,
-      ~x1: float,
-      ~y1: float,
-      ~z1: float,
-      ~x2: float,
-      ~y2: float,
-      ~z2: float,
-      ~x3: float,
-      ~y3: float,
-      ~z3: float,
-      ~x4: float,
-      ~y4: float,
-      ~z4: float,
-      ~detailX: int=?,
-      ~detailY: int=?,
-      unit,
-    ) => unit = "quad"
+// --- triangle ---
+@val
+external triangle: (
+  ~x1: float,
+  ~y1: float,
+  ~x2: float,
+  ~y2: float,
+  ~x3: float,
+  ~y3: float,
+) => unit = "triangle"
 
-    // --- rect ---
-    @send
-    external rect: (
-      t,
-      ~x: float,
-      ~y: float,
-      ~w: float,
-      ~h: float=?,
-      ~tl: float=?,
-      ~tr: float=?,
-      ~br: float=?,
-      ~bl: float=?,
-      unit,
-    ) => unit = "rect"
+// --- Polymorphic modes helpers ---
+@val
+external rectModeRaw: string => unit = "rectMode"
 
-    // --- square ---
-    @send
-    external square: (
-      t,
-      ~x: float,
-      ~y: float,
-      ~s: float,
-      ~tl: float=?,
-      ~tr: float=?,
-      ~br: float=?,
-      ~bl: float=?,
-      unit,
-    ) => unit = "square"
-
-    // --- triangle ---
-    @send
-    external triangle: (
-      t,
-      ~x1: float,
-      ~y1: float,
-      ~x2: float,
-      ~y2: float,
-      ~x3: float,
-      ~y3: float,
-    ) => unit = "triangle"
-
-    // --- Polymorphic modes helpers ---
-    @send
-    external rectModeRaw: (t, string) => unit = "rectMode"
-
-    let rectMode = (inst: t, mode: mode) => {
-      let modeStr = switch mode {
-      | #CORNER => "corner"
-      | #CORNERS => "corners"
-      | #CENTER => "center"
-      | #RADIUS => "radius"
-      }
-      rectModeRaw(inst, modeStr)
-    }
-
-    @send
-    external ellipseModeRaw: (t, string) => unit = "ellipseMode"
-
-    let ellipseMode = (inst: t, mode: mode) => {
-      let modeStr = switch mode {
-      | #CORNER => "corner"
-      | #CORNERS => "corners"
-      | #CENTER => "center"
-      | #RADIUS => "radius"
-      }
-      ellipseModeRaw(inst, modeStr)
-    }
+let rectMode = (mode: mode) => {
+  let modeStr = switch mode {
+  | #CORNER => "corner"
+  | #CORNERS => "corners"
+  | #CENTER => "center"
+  | #RADIUS => "radius"
   }
+  rectModeRaw(modeStr)
+}
+
+@val
+external ellipseModeRaw: string => unit = "ellipseMode"
+
+let ellipseMode = (mode: mode) => {
+  let modeStr = switch mode {
+  | #CORNER => "corner"
+  | #CORNERS => "corners"
+  | #CENTER => "center"
+  | #RADIUS => "radius"
+  }
+  ellipseModeRaw(modeStr)
 }
 
 module Vector = {
