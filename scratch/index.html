@@ -6,77 +6,42 @@
 	</head>
 	<body>
 		<script>
-const white = "#fff";
-const cyan = "#55ffff";
-const magenta = "#ff55ff";
-
-function cactus(x,y, baseHeight, distance) {
-  // saguaro-like cactus with random number of arms
-  if (distance >= 4) {
-    stroke(white);
-  } else if (distance >= 2) {
-    stroke(cyan);
-  } else {
-    stroke(magenta);
-  }
-
-  strokeWeight(1.5 / distance);
-
-  let dy = baseHeight+random(25,100);
-  let cHeight = dy;
-
-  // spine
-  line(x,y, x, y-dy);
-
-  // arms
-  const nArms = random(1, 4);
-  for(let i=1; i <= nArms; i++) {
-    let xpos = x + random(-cHeight/4, cHeight/4);
-    let y1 = y - 0.30*cHeight;
-    let y2 = y1 - random(cHeight/6, cHeight/3);
-    line(xpos, y1, xpos, y2);
-    line(xpos, y1, x, y1+10);
-  }
-}
+let patternImg;
 
 function setup() {
-  createCanvas(640, 640);
-  background(0);
+  createCanvas(400, 400);
 
-  // sketch name
-  noFill();
-  stroke(255);
-  strokeWeight(1);
-  textSize(15);
-  text("Cactus", 10, height-10);
+  // 1. Create a tiny 2x2 grid for a checkerboard/dither pattern
+  patternImg = createGraphics(2, 2);
+  patternImg.noStroke();
+  patternImg.background(250);          // Primary color
+  patternImg.fill(40);                 // Secondary dither color
+  patternImg.rect(0, 0, 1, 1);
+  patternImg.rect(1, 1, 1, 1);
 
-  
-  let cga = [white, cyan, magenta];
-
-  // landscape
-  for (let y=400, x=0, z=0.25; y < 620; y+=10, x+=10, z+=0.06) {
-    strokeWeight(z);
-    if (y < 575) {
-      stroke(y < 475 ? white : cyan);
-      line(x*5+random(0,100), y, 200 + random(100,200), y);
-    } else {
-      stroke(magenta);
-      line(x*3 + random(-200, -350), y, x*4, y);
-    }
-  }
-
-  // cactus
-  //cactus(444 + random(-25, 25), 420, 25, 5);
-  //cactus(500 + random(0, 100), 450, 110, 4);
-  for (let nc = 0, d = 5; nc < 5; nc++, d--) {
-    cactus(random(0,600), 400 + nc*50, 100*nc+100, d);
-  }
+  noLoop();
 }
 
-function keyPressed() {
-  if (key == 's') {
-    saveCanvas("day4.png");
-  }
+function draw() {
+  background(220);
+
+  // 2. Convert p5.Graphics to an HTML Canvas Pattern
+  let ctx = drawingContext;
+  let pattern = ctx.createPattern(patternImg.canvas, 'repeat');
+
+  // 3. Apply pattern fill and draw standard p5 shapes
+  ctx.fillStyle = pattern;
+  stroke(0);
+  strokeWeight(2);
+
+  rect(50, 50, 120, 100);
+  
+  beginShape();
+  vertex(220, 50);
+  vertex(320, 80);
+  vertex(280, 180);
+  vertex(200, 150);
+  endShape(CLOSE);
 }
 		</script>
 	</body>
